@@ -164,3 +164,30 @@ This issue will be corrected during the workflow troubleshooting task.
 One limitation is that the detector uses fixed thresholds. If normal service
 behaviour changes, fixed thresholds may miss anomalies or create false alarms.
 Dynamic thresholds based on historical data would be an improvement.
+
+## Task 4: AIOps Event Flow
+
+The anomaly event-processing flow is:
+
+Operational data -> Anomaly detection -> Event -> Producer -> Topic -> Consumer -> AIOps output
+
+The anomaly detector reads each operational record. When abnormal behaviour is
+found, it creates an event containing the timestamp, service name, event type,
+reasons, and original source record.
+
+The producer receives the anomaly event and publishes it to the in-memory event
+topic.
+
+The topic acts as a temporary message channel. It stores the events published
+by the producer.
+
+The consumer reads the events from the topic and returns them for downstream
+processing.
+
+The AIOps pipeline combines these components and displays the final result,
+including the affected service, timestamp, event type, and anomaly reasons.
+
+The event-flow validation confirmed that an anomaly event was created,
+published by the producer, stored in the `anomaly-events` topic, and received
+by the consumer. The producer and consumer must use the same topic instance
+for the consumer to receive the published event.
