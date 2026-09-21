@@ -214,3 +214,62 @@ The final execution result was:
 Records processed: 10
 Anomalies detected: 2
 Events consumed: 2
+
+## AIOps Assessment Summary
+
+### Scenario
+
+This project monitors a synthetic `payment-service`. The aim is to detect slow
+payment requests, high resource usage, and service or database timeouts.
+
+AIOps is used to analyse service data, detect unusual behaviour, and move
+anomaly events through a simple event-processing workflow.
+
+### Operational Data
+
+The data is stored in `data/service_data.json`. Each record contains a
+timestamp, service name, response time, CPU usage, memory usage, log level, and
+message.
+
+The metric fields are:
+
+- `response_time_ms`
+- `cpu_percent`
+- `memory_percent`
+
+The log fields are:
+
+- `log_level`
+- `message`
+
+The records are timestamped once per minute. Most records show normal
+behaviour: response times are around 120 to 150 ms, CPU and memory usage are
+moderate, and the log level is `INFO`.
+
+Two records are unusual:
+
+- At `10:05`, the response time was `610 ms` and the service reported a payment
+  timeout.
+- At `10:06`, the response time was `640 ms`, CPU was `94%`, memory was `91%`,
+  and the service reported a database connection timeout.
+
+### Anomaly Detection
+
+The detector processed 10 records and identified 2 anomalies. It detected the
+high response time in both unusual records, and also detected high CPU and
+memory usage at `10:06`.
+
+The detector initially checked only for `WARNING` logs, even though the data
+contained `ERROR` logs. This was corrected so both `WARNING` and `ERROR` logs
+are detected. No normal records were incorrectly flagged.
+
+### Event Processing Flow
+
+The workflow is:
+
+```text
+Operational data -> Anomaly detector -> Event -> Producer -> Topic -> Consumer -> AIOps output
+Limitation:
+The detector uses fixed thresholds. If normal service behaviour changes, these
+thresholds may create false alarms or miss anomalies. Dynamic thresholds based
+on historical data would improve the approach.
