@@ -191,3 +191,26 @@ The event-flow validation confirmed that an anomaly event was created,
 published by the producer, stored in the `anomaly-events` topic, and received
 by the consumer. The producer and consumer must use the same topic instance
 for the consumer to receive the published event.
+
+## Task 6: End-to-End Pipeline Execution
+
+The complete AIOps workflow was executed successfully.
+
+The pipeline processed 10 operational records and detected 2 anomalies. The
+anomaly events were passed to the producer and published to the shared
+`anomaly-events` topic.
+
+The consumer received and processed both events. The final output identified
+the following operational issues:
+
+- A payment service timeout at `2026-09-20T10:05:00`.
+- A database connection timeout at `2026-09-20T10:06:00`.
+- High response time in both anomalous records.
+- High CPU and memory usage at `10:06`.
+
+The final execution result was:
+
+
+Records processed: 10
+Anomalies detected: 2
+Events consumed: 2
