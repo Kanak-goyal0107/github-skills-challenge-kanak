@@ -273,3 +273,12 @@ Limitation:
 The detector uses fixed thresholds. If normal service behaviour changes, these
 thresholds may create false alarms or miss anomalies. Dynamic thresholds based
 on historical data would improve the approach.
+## Files Changed
+
+I kept the original project structure and changed only the files needed for the
+assessment:
+
+- `README.md`: Documents the AIOps scenario, findings, corrections, and results.
+- `requirements.txt`: Includes `pytest-cov` so the coverage command can run.
+- `src/anomaly_detector.py`: Detects both `WARNING` and `ERROR` log events.
+- `src/aiops_pipeline.py`: Uses one shared topic for the producer and consumer.
